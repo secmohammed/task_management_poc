@@ -1,0 +1,198 @@
+# ------------------------------------------------------
+# THIS FILE WAS AUTOMATICALLY GENERATED (DO NOT MODIFY)
+# ------------------------------------------------------
+
+input ChangePasswordDTO {
+  old_password: String!
+  password: String!
+  password_confirmation: String!
+}
+
+input CreateAssignees {
+  taskId: String!
+  userIds: [String!]!
+}
+
+input CreateMember {
+  teamId: String!
+  userIds: [String!]!
+}
+
+input CreateTask {
+  description: String!
+  status: String!
+  title: String!
+}
+
+input CreateTeam {
+  name: String!
+}
+
+"""
+A date-time string at UTC, such as 2019-12-03T09:54:33Z, compliant with the date-time format.
+"""
+scalar DateTime
+
+input DeleteTask {
+  taskId: String!
+}
+
+input DeleteTeam {
+  teamId: String!
+}
+
+input DestroyAssignees {
+  taskId: String!
+  userIds: [String!]!
+}
+
+input DestroyMember {
+  teamId: String!
+  userIds: [String!]!
+}
+
+input ForgotPasswordDTO {
+  email: String!
+}
+
+input IsID {
+  id: String!
+}
+
+input LoginUser {
+  email: String!
+  password: String!
+}
+
+type Mutation {
+  changePassword(input: ChangePasswordDTO!): UserDTO!
+  createTask(data: CreateTask!): TaskDTO!
+  createTeam(data: CreateTeam!): TeamDTO!
+  deleteAssignees(data: DestroyAssignees!): TaskDTO!
+  deleteMember(data: DestroyMember!): TeamDTO!
+  deleteTask(data: DeleteTask!): TaskDTO!
+  deleteTeam(data: DeleteTeam!): TeamDTO!
+  forgotPassword(input: ForgotPasswordDTO!): RemindableDTO!
+  login(data: LoginUser!): UserDTO!
+  register(data: RegisterUser!): UserDTO!
+  resetPassword(input: ResetPasswordDTO!): UserDTO!
+  storeAssignees(data: CreateAssignees!): [UserDTO!]!
+  storeMember(data: CreateMember!): TeamDTO!
+  updateTask(data: UpdateTask!): TaskDTO!
+}
+
+type Query {
+  me: UserDTO!
+  showTask(data: IsID!): TaskDTO!
+  showTeam(data: IsID!): TeamDTO!
+  tasks(page: Float = 1): [TaskDTO!]!
+  teams(page: Float = 1): [TeamDTO!]!
+  users(page: Float = 1): [UserDTO!]!
+}
+
+input RegisterUser {
+  email: String!
+  name: String!
+  password: String!
+  password_confirmation: String!
+}
+
+type RemindableDTO {
+  created_at: DateTime!
+  expires_at: DateTime!
+  id: ID!
+  is_expired: Boolean!
+  is_used: Boolean!
+  updated_at: DateTime!
+  user: UserEntity!
+}
+
+type RemindableEntity {
+  created_at: DateTime!
+  expires_at: DateTime!
+  id: ID!
+  is_expired: Boolean!
+  is_used: Boolean!
+  updated_at: DateTime!
+  user: UserEntity!
+}
+
+input ResetPasswordDTO {
+  password: String!
+  password_confirmation: String!
+  token: String!
+}
+
+type TaskDTO {
+  assignees: [UserDTO!]!
+  created_at: DateTime!
+  description: String!
+  id: ID!
+  owner: UserDTO!
+  status: String!
+  title: String!
+  updated_at: DateTime!
+}
+
+type TaskEntity {
+  assignees: [UserEntity!]!
+  created_at: DateTime!
+  description: String!
+  id: ID!
+  owner: UserEntity!
+  status: String!
+  title: String!
+  updated_at: DateTime!
+}
+
+type TeamDTO {
+  created_at: DateTime!
+  id: ID!
+  members: [UserDTO!]!
+  name: String!
+  owner: UserDTO!
+  updated_at: DateTime!
+}
+
+type TeamEntity {
+  created_at: DateTime!
+  id: ID!
+  members: [UserEntity!]!
+  name: String!
+  owner: UserEntity!
+  updated_at: DateTime!
+}
+
+input UpdateTask {
+  description: String!
+  id: String!
+  status: String!
+  title: String!
+}
+
+type UserDTO {
+  auth_token: String!
+  created_at: DateTime!
+  email: String!
+  email_verified: Boolean!
+  email_verified_at: DateTime!
+  id: ID!
+  name: String!
+  remindables: [RemindableEntity!]!
+  tasks: [TaskEntity!]!
+  teams: [TeamDTO!]!
+  updated_at: DateTime!
+}
+
+type UserEntity {
+  created_at: DateTime!
+  email: String!
+  email_verified: Boolean!
+  email_verified_at: DateTime!
+  id: ID!
+  name: String!
+  remindables: [RemindableEntity!]!
+  tasks: [TaskEntity!]!
+  teams: [TeamEntity!]!
+  updated_at: DateTime!
+}
