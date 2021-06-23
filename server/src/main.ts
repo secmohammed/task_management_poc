@@ -23,18 +23,18 @@ async function bootstrap() {
     AppModule,
     fastify,
   );
-    fastify.register(require('fastify-rate-limit'), {
-      max: 100,
-      timeWindow: '1 minute',
-      redis,
-      whitelist: ['127.0.0.1'],
-      addHeaders: {
-        'x-ratelimit-limit': true,
-        'x-ratelimit-remaining': true,
-        'x-ratelimit-reset': true,
-        'retry-after': true,
-      },
-    });
+  fastify.register(require('fastify-rate-limit'), {
+    max: 100,
+    timeWindow: '1 minute',
+    redis,
+    whitelist: ['127.0.0.1'],
+    addHeaders: {
+      'x-ratelimit-limit': true,
+      'x-ratelimit-remaining': true,
+      'x-ratelimit-reset': true,
+      'retry-after': true,
+    },
+  });
   app.useLogger(app.get(WINSTON_MODULE_NEST_PROVIDER));
 
   app.use(hpp());

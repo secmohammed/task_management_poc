@@ -2,13 +2,15 @@
   {
     "name": "default",
     "type": "postgres",
-    "host": "localhost",
+    "host": "postgres",
     "port": 5432,
     "username": "mohammed",
     "password": "root",
     "database": "task_management",
     "synchronize": true,
     "logging": true,
+    "factories": ["dist/**/seeders/*.factory.js"],
+    "seeds": ["dist/**/seeders/*.seeder.js"],
     "entities": ["dist/**/*.entity.js"]
   },
   {

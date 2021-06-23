@@ -2,7 +2,8 @@ import { Module } from '@nestjs/common';
 import { GraphQLModule } from '@nestjs/graphql';
 import { PubSub } from 'graphql-subscriptions';
 import { config } from '../shared/config';
-import { RedisCache } from 'apollo-server-cache-redis';
+import { BaseRedisCache } from 'apollo-server-cache-redis';
+
 import { APP_INTERCEPTOR, APP_FILTER } from '@nestjs/core';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { join } from 'path';
@@ -16,10 +17,18 @@ import {
   WinstonModule,
   utilities as nestWinstonModuleUtilities,
 } from 'nest-winston';
+import { BullModule } from '@nestjs/bull';
+import { redis } from '../shared/utils/redis';
 const ormconfig = require('../../ormconfig.json');
 
 @Module({
   imports: [
+    BullModule.forRoot({
+      redis: {
+        host: 'redis-server',
+        port: 6379,
+      },
+    }),
     WinstonModule.forRoot({
       level: 'error',
       format: winston.format.json(),
@@ -40,8 +49,8 @@ const ormconfig = require('../../ormconfig.json');
       sortSchema: true,
       persistedQueries: {
         ttl: config.PERSISTED_QUERY_TTL as number, // 1h
-        cache: new RedisCache({
-          host: config.REDIS_URL,
+        cache: new BaseRedisCache({
+          client: redis,
         }),
       },
       context: ({ request }) => ({ headers: request.headers }),

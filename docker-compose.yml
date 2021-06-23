@@ -1,55 +1,51 @@
-version: '3'
+version: '3.8'
 
 services:
   reverse-proxy:
-    # The official v2 Traefik docker image
     image: traefik:v2.2
-    # Enables the web UI and tells Traefik to listen to docker
     command:
       - '--api.insecure=true'
       - '--providers.docker'
       - '--providers.docker.exposedByDefault=false'
     ports:
-      # The HTTP port
       - '80:80'
-      # The Web UI (enabled by --api.insecure=true)
-      - '8080:8080'
     volumes:
-      # So that Traefik can listen to the Docker events
       - /var/run/docker.sock:/var/run/docker.sock
   main:
     container_name: main
     build:
-      context: .
+      context: ./server
       target: development
     volumes:
-      - .:/usr/src/app
+      - ./server:/usr/src/app
       - /usr/src/app/node_modules
     ports:
       - ${SERVER_PORT}:${SERVER_PORT}
       - 9229:9229
-    command: npm run start:dev
+    command: >
+      sh -c "npm install && npm run build && npm run seed:run && npm run start:dev"
     env_file:
-      - .env
-    # networks:
-    #   - webnet
+      - ./server/.env
+    networks:
+      - webnet
     depends_on:
-      - redis
+      - redis-server
       - postgres
-  redis:
-    image: 'redis:alpine'
-    command: ['redis-server', '--bind', 'redis', '--port', '6379']
+  redis-server:
+    image: redis
+    command: ['redis-server', '/tmp/redis.conf']
     ports:
       - '6379:6379'
     volumes:
       - 'redisdata:/data'
-    # networks:
-    #   - webnet
+      - ./server/redis.conf:/tmp/redis.conf
+    networks:
+      - webnet
   postgres:
     container_name: postgres
     image: postgres:12
-    # networks:
-    #   - webnet
+    networks:
+      - webnet
     environment:
       POSTGRES_PASSWORD: ${DB_PASSWORD}
       POSTGRES_USER: ${DB_USERNAME}
@@ -59,8 +55,25 @@ services:
       - 5432:5432
     volumes:
       - pgdata:/var/lib/postgresql/data
-# networks:
-#   webnet:
+  client:
+    build:
+      context: ./client
+    image: client # if we don't give image name, traefik won't create router 🤷‍♂️
+    expose:
+      - '3000'
+    ports:
+      - '3000:3000'
+    labels:
+      - 'traefik.enable=true'
+    volumes:
+      - ./client:/app
+      - /app/node_modules #avoid overwriting node_modules
+    depends_on:
+      - reverse-proxy
+    command: npm run start
+
+networks:
+  webnet:
 volumes:
   pgdata:
   redisdata:
