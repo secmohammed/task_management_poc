@@ -99,7 +99,6 @@ const Tasks = ({ me }: any) => {
     task: any,
     { status, title, description, userIds }: any,
   ) => {
-    console.log(task, status, title, description, userIds)
     await editTask({
       variables: {
         id: task.id,
@@ -108,23 +107,20 @@ const Tasks = ({ me }: any) => {
         description,
       },
     })
-    //TODO
-    const deletedAssignees = task.assignees
-      .filter((assignee: any) =>
-        userIds.some(
-          (userId: any) => userId === assignee.id,
-        ),
-      )
-      .map((assignee: any) => assignee.id)
-    // if (deletedAssignees.length) {
+    const oldAssignees = task.assignees.map((assignee: any) => assignee.id)
     await deleteAssignees({
       variables: {
         taskId: task.id,
-        userIds: deletedAssignees,
+        userIds: oldAssignees,
+      },
+    })
+    await createAssignees({
+      variables: {
+        taskId: task.id,
+        userIds,
       },
     })
     refetchTasks()
-    // }
     setIsEditModalVisible(false)
   }
   const handleDeleteSubmission = React.useCallback(

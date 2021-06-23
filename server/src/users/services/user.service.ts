@@ -57,11 +57,11 @@ export class UserService {
     recent: boolean = true,
   ): Promise<Partial<UserDTO[]>> {
     const options: FindManyOptions = {
-      take: 25,
-      order: {
-        created_at: recent ? 'DESC' : 'ASC',
-      },
-      skip: 25 * (page - 1),
+    //   take: 25,
+    //   order: {
+    //     created_at: recent ? 'DESC' : 'ASC',
+    //   },
+    //   skip: 25 * (page - 1),
     };
     const users = await this.users.find(options);
     return users.map((user: User) => user.toResponseObject(false));

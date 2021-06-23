@@ -4,7 +4,6 @@ import * as helmet from 'helmet';
 import compression from 'fastify-compress';
 
 import { ValidationPipe } from './shared/pipes/validation.pipe';
-import { redis } from './shared/utils/redis';
 import 'dotenv/config';
 
 import {
@@ -14,7 +13,7 @@ import {
 import { WINSTON_MODULE_NEST_PROVIDER } from 'nest-winston';
 import * as hpp from 'hpp';
 import { config } from './shared/config';
-
+import Redis from 'ioredis'
 async function bootstrap() {
   const fastify = new FastifyAdapter({
     logger: config.APP_ENV !== 'production',
@@ -26,7 +25,10 @@ async function bootstrap() {
   fastify.register(require('fastify-rate-limit'), {
     max: 100,
     timeWindow: '1 minute',
-    redis,
+    redis: new Redis({
+        host: 'redis-server',
+        port: 6379
+    }),
     whitelist: ['127.0.0.1'],
     addHeaders: {
       'x-ratelimit-limit': true,
