@@ -179,7 +179,7 @@ type UserDTO {
   id: ID!
   name: String!
   remindables: [RemindableEntity!]!
-  tasks: [TaskEntity!]!
+  tasks: [TaskDTO!]!
   teams: [TeamDTO!]!
   updated_at: DateTime!
 }

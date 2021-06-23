@@ -20,16 +20,23 @@ import { ChangePasswordDTO } from '../validation/change-password.dto';
 import { RemindableDTO } from '../dtos/remindable.dto';
 import { TeamDTO } from '../../teams/dtos/team.dto';
 import { TeamService } from '../../teams/services/team.service';
+import { TaskDTO } from '../../tasks/dtos/task.dto';
+import { TaskService } from '../../tasks/services/task.service';
 
 @Resolver(() => UserDTO)
 export class UserResolver {
   constructor(
     private readonly userService: UserService,
     private readonly teamService: TeamService,
+    private readonly taskService: TaskService,
   ) {}
   @ResolveField(() => [TeamDTO])
   teams(@Parent() parent: UserDTO): Promise<TeamDTO[]> {
     return this.teamService.findById(parent.id);
+  }
+  @ResolveField(() => [TaskDTO])
+  tasks(@Parent() parent: TaskDTO): Promise<TaskDTO[]> {
+    return this.taskService.findById(parent.id);
   }
 
   @Query(() => [UserDTO])

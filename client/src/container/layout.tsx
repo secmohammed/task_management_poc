@@ -6,7 +6,7 @@ import {
 import React from 'react'
 import { useHistory } from 'react-router-dom'
 
-const { Content, Sider } = Layout
+const { Content, Sider, Footer } = Layout
 
 const CustomLayout = ({ children }: any) => {
   const history = useHistory()
@@ -16,6 +16,7 @@ const CustomLayout = ({ children }: any) => {
     setDefaultSelection(key)
   }, [])
   return (
+    <>
     <Content style={{ padding: '0 50px' }}>
       <Breadcrumb style={{ margin: '16px 0' }}>
         <Breadcrumb.Item>Home</Breadcrumb.Item>
@@ -23,7 +24,6 @@ const CustomLayout = ({ children }: any) => {
       </Breadcrumb>
       <Layout
         className='site-layout-background'
-        style={{ padding: '24px 0' }}
       >
         <Sider
           className='site-layout-background'
@@ -64,9 +64,15 @@ const CustomLayout = ({ children }: any) => {
           style={{ padding: '0 24px', minHeight: 280 }}
         >
           {children}
+
+
         </Content>
       </Layout>
     </Content>
+    <Footer style={{ textAlign: 'center' }}>
+      Ant Design ©2018 Created by Ant UED
+    </Footer>
+    </>
   )
 }
 

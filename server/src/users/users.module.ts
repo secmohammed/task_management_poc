@@ -10,9 +10,11 @@ import { TeamService } from '../teams/services/team.service';
 import { TeamEntity } from '../teams/entities/team.entity';
 
 import { RemindableEntity } from './entities/remindable.entity';
+import { TaskService } from '../tasks/services/task.service';
+import { TaskEntity } from 'src/tasks/entities/task.entity';
 @Module({
   imports: [
-    TypeOrmModule.forFeature([UserEntity, RemindableEntity, TeamEntity]),
+  TypeOrmModule.forFeature([UserEntity, RemindableEntity, TeamEntity, TaskEntity]),
     BullModule.registerQueue({
       name: 'user',
     }),
@@ -21,6 +23,7 @@ import { RemindableEntity } from './entities/remindable.entity';
     MailActivationProcessor,
     UserResolver,
     TeamService,
+    TaskService,
     UserService,
 
     //...UserDataLoader.register()

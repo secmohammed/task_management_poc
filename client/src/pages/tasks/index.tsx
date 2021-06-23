@@ -5,13 +5,12 @@ import {
   useMutation,
   useLazyQuery,
 } from '@apollo/client'
-
+import { PlusCircleOutlined } from '@ant-design/icons'
 import {
   Modal,
   Table,
   Input,
   Button,
-  Typography,
   Form,
   Tag,
   Select,
@@ -38,16 +37,10 @@ const Tasks = ({ me }: any) => {
       fetchPolicy: 'cache-first',
     },
   )
-  const [editTask, { error: editTaskError }] =
-    useMutation(UPDATE_TASK)
-  const [
-    createTask,
-    { data: createdTask, error: taskError },
-  ] = useMutation(CREATE_TASK)
-  const [createAssignees, { error: assigneeError }] =
-    useMutation(CREATE_ASSIGNEE)
-  const [deleteAssignees, { error: deleteAssigneeError }] =
-    useMutation(DELETE_ASSIGNEES)
+  const [editTask] = useMutation(UPDATE_TASK)
+  const [createTask] = useMutation(CREATE_TASK)
+  const [createAssignees] = useMutation(CREATE_ASSIGNEE)
+  const [deleteAssignees] = useMutation(DELETE_ASSIGNEES)
   const [isModalVisible, setIsModalVisible] =
     useState<boolean>(false)
   const [isEditModalVisible, setIsEditModalVisible] =
@@ -107,7 +100,9 @@ const Tasks = ({ me }: any) => {
         description,
       },
     })
-    const oldAssignees = task.assignees.map((assignee: any) => assignee.id)
+    const oldAssignees = task.assignees.map(
+      (assignee: any) => assignee.id,
+    )
     await deleteAssignees({
       variables: {
         taskId: task.id,
@@ -132,7 +127,7 @@ const Tasks = ({ me }: any) => {
       })
       refetchTasks()
     },
-    [],
+    [refetchTasks, deleteTask],
   )
   const columns = [
     {
@@ -294,7 +289,12 @@ const Tasks = ({ me }: any) => {
     <>Loading...</>
   ) : (
     <>
-      <Button onClick={showModal}>+</Button>
+      <Button
+        onClick={showModal}
+        type='primary'
+        shape='circle'
+        icon={<PlusCircleOutlined />}
+      ></Button>
       <Table
         bordered
         dataSource={data.tasks}

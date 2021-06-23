@@ -18,7 +18,7 @@ const Create = () => {
     console.log('Failed:', errorInfo)
   }
 
-  const [register, { error, data }] = useMutation(
+  const [register ] = useMutation(
     REGISTER_USER_MUTATION,
     {
       errorPolicy: 'all',

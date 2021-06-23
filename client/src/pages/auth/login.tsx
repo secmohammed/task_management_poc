@@ -27,7 +27,7 @@ const Login = () => {
     }
   })
 
-  const [login, { error, data }] = useMutation(
+  const [login, { data }] = useMutation(
     LOGIN_USER_MUTATION,
     {
       errorPolicy: 'all',
